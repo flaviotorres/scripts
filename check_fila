@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#check_fila, v1
+#Informa e trata quantidade de emails na fila e prepara a saida para o nagios
+#Adaptado por Flavio Torres, ftorres@ig.com
+#Maio, 2011
+
+PATH=$PATH:/usr/local/bin:/usr/sbin/
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+filas=$(showpostqueue | awk '{print $3}' | sed 's/.*://g')
+if (( $filas < 3000 ))
+        then echo "OK - Fila: $filas"
+        exit $STATE_OK
+fi
+if (( $filas > 3001 && $filas < 5000 ))
+        then echo "WARNING - Fila: $filas"
+        exit $STATE_WARNING
+fi
+if (( $filas > 5001 ))
+        then echo "CRITICAL - Fila: $filas"
+        exit $STATE_CRITICAL
+fi
+
