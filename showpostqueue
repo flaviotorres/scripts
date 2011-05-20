@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#showpostqueue, v1
+#Coleta informacoes da fila do postfix para cacti
+#Flavio Torres, ftorres@ig.com
+#Abril, 2011
+
+#Adicionar em /usr/local/bin/
+#exec .1.3.6.1.4.1.2021.53.101.0 mailq /usr/local/bin/showpostqueue
+
+QUEUES="incoming active deferred hold"
+
+for i in $QUEUES; do
+        COUNT=`qshape $i | grep TOTAL | awk '{print $2}'`
+        printf "$i:$COUNT "
+done
+
