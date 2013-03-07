@@ -1,4 +1,3 @@
--------------------------------------------------------------------------------------
 @echo on
 
 :: Name - IISZip.bat
@@ -14,40 +13,53 @@ set month=%DATE:~3,2%
 set year=%DATE:~8,2%
 
 ::yyyymmdd
-for /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set ddate=%%c%%a%%b)
+for /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set YYYYMMDD=%%c%%a%%b)
 
 :: Yesterday
-for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set DATE=%%c%%b 
-for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set /a DAY=%%b
-for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set /a YEAR=%%d
+for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set MMDD=%%b%%c
+for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set MM=%%b
+for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set /a DD=%%b
+for /F "tokens=1-4 delims=/- " %%a in ('date/T') do set /a YYYY=%%d
 
-set YEARYY = YEAR - 2000
+set /a YY = %YYYY% - 2000
 
-set /a DATA = %YEARYY%%DATE%
+set /a YYMMDD = %YY%%MMDD%
 
-set /a YESTERDAY = DATA - 1
-echo %DAY%
-if  "%DAY%" == "1" ( 
-      set YESTERDAY=%DATA%
+set /a DAY_YESTERDAY = %DD% - 1
+
+echo %DAY_YESTERDAY%
+
+if  "%DAY_YESTERDAY%" == "1" ( 
+      set /a YESTERDAY=%YYMMDD%
 )else (
-      set YESTERDAY = DATA - 1
+      set /a YESTERDAY = %YYMMDD% - 1
 )
 echo %YESTERDAY%
 
 :: Variaveis internas
-set logpath="C:\WINDOWS\system32\LogFiles"
-set zippath="C:\Program Files\7-Zip\7z.exe"
-set arcpath="C:\Backup\IIS"
+set logpath1="C:\inetpub\logs\LogFiles\W3SVC1"
+set logpath2="C:\inetpub\logs\LogFiles\W3SVC2"
+set logpath3="C:\inetpub\logs\LogFiles\W3SVC3"
+set zippath="C:\Program Files (x86)\7-Zip\7z.exe"
+set arcpath1="C:\Backup\IIS\W3SVC1"
+set arcpath2="C:\Backup\IIS\W3SVC2"
+set arcpath3="C:\Backup\IIS\W3SVC3"
 
-
-:: ========================================================
-:: Vai para o diretorio de log
-:: ========================================================
-cd /D %logpath%
 
 :: ========================================================
 :: Compacta o ultimo dia de log e envia para o diretorio de backup
 :: ========================================================
-%zippath% a -tzip ex%YESTERDAY%-logs.zip %logpath%\ex%YESTERDAY%*.log
-copy "%logpath%\*.zip" "%arcpath%"
-:: del %logpath%\ex%YESTERDAY%*.log
+cd /D %logpath1%
+%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath1%\u_ex%YYMMDD%*.log
+copy "%logpath1%\*.zip" "%arcpath1%"
+:: del %logpath1%\u_ex%YYMMDD%*.log
+
+cd /D %logpath2%
+%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath2%\u_ex%YYMMDD%*.log
+copy "%logpath2%\*.zip" "%arcpath2%"
+:: del %logpath2%\u_ex%YYMMDD%*.log
+
+cd /D %logpath3%
+%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath3%\u_ex%YYMMDD%*.log
+copy "%logpath3%\*.zip" "%arcpath3%"
+:: del %logpath3%\u_ex%YYMMDD%*.log
