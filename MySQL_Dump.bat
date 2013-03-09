@@ -48,6 +48,8 @@ if "X%servicerunning%%" == "X" (goto service_stopped) ELSE (goto service_running
     REM Zip it up and remove the temp file.
     %zip_path%\7z.exe a -t7z %output_path%\%ddate%.7z %output_path%\%ddate%.sql
     del "%output_path%\%ddate%.sql"
+    REM Remove arquivos mais antigos que 7 dias do diretorio de backup
+    forfiles /p "c:\Backup" /s /m *.zip /d -7 /C "cmd /c del @path"
     goto :EOF
      
 :error
