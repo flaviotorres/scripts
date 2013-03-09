@@ -44,9 +44,9 @@ set arcpath2="C:\Backup\IIS\W3SVC2"
 set arcpath3="C:\Backup\IIS\W3SVC3"
 
 
-:: ========================================================
+:: ===============================================================
 :: Compacta o ultimo dia de log e envia para o diretorio de backup
-:: ========================================================
+:: ===============================================================
 cd /D %logpath2%
 copy %logpath2%\u_ex%YYMMDD%.log "%arcpath2%"
 cd /D "%arcpath2%"
@@ -60,4 +60,10 @@ cd /D "%arcpath3%"
 %zippath% a -tzip u_ex%YYMMDD%-logs.zip %arcpath3%\u_ex%YYMMDD%.log
 del "%arcpath3%"\u_ex%YYMMDD%.log
 :: del %logpath3%\u_ex%YYMMDD%.log
+
+:: ===============================================================
+:: Remove arquivos mais antigos que 7 dias do diretorio de backup
+:: ===============================================================
+
+forfiles /p "c:\Backup" /s /m *.zip /d -7 /C "cmd /c del @path"
 
