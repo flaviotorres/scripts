@@ -37,11 +37,9 @@ if  "%DAY_YESTERDAY%" == "1" (
 echo %YESTERDAY%
 
 :: Variaveis internas
-set logpath1="C:\inetpub\logs\LogFiles\W3SVC1"
 set logpath2="C:\inetpub\logs\LogFiles\W3SVC2"
 set logpath3="C:\inetpub\logs\LogFiles\W3SVC3"
 set zippath="C:\Program Files (x86)\7-Zip\7z.exe"
-set arcpath1="C:\Backup\IIS\W3SVC1"
 set arcpath2="C:\Backup\IIS\W3SVC2"
 set arcpath3="C:\Backup\IIS\W3SVC3"
 
@@ -49,17 +47,17 @@ set arcpath3="C:\Backup\IIS\W3SVC3"
 :: ========================================================
 :: Compacta o ultimo dia de log e envia para o diretorio de backup
 :: ========================================================
-cd /D %logpath1%
-%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath1%\u_ex%YYMMDD%*.log
-copy "%logpath1%\*.zip" "%arcpath1%"
-:: del %logpath1%\u_ex%YYMMDD%*.log
-
 cd /D %logpath2%
-%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath2%\u_ex%YYMMDD%*.log
-copy "%logpath2%\*.zip" "%arcpath2%"
-:: del %logpath2%\u_ex%YYMMDD%*.log
+copy %logpath2%\u_ex%YYMMDD%.log "%arcpath2%"
+cd /D "%arcpath2%"
+%zippath% a -tzip u_ex%YYMMDD%-logs.zip %arcpath2%\u_ex%YYMMDD%.log
+del "%arcpath2%"\u_ex%YYMMDD%.log
+:: del %logpath2%\u_ex%YYMMDD%.log
 
 cd /D %logpath3%
-%zippath% a -tzip u_ex%YYMMDD%-logs.zip %logpath3%\u_ex%YYMMDD%*.log
-copy "%logpath3%\*.zip" "%arcpath3%"
-:: del %logpath3%\u_ex%YYMMDD%*.log
+copy %logpath3%\u_ex%YYMMDD%.log "%arcpath3%"
+cd /D "%arcpath3%"
+%zippath% a -tzip u_ex%YYMMDD%-logs.zip %arcpath3%\u_ex%YYMMDD%.log
+del "%arcpath3%"\u_ex%YYMMDD%.log
+:: del %logpath3%\u_ex%YYMMDD%.log
+
