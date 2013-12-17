@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# MacOS Calendar highlighted
+# and ddd at your ~/.bash_profile: alias cal='/usr/local/bin/cal_fix'
+CMD=$@
+cal $CMD | grep -E --color "\b`date +%e`\b|$"
